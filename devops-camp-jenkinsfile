@@ -2,7 +2,7 @@ pipeline {
     agent {
         label 'jenkins-agent'
     }
-    //TODO("Lab 4 - Artifact Management"): add environment variables
+    //TODO("Lab 4 - Artifact Management"): add environment variables adding nothing
     environment {
         PIPELINE_HASH = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
         HARBOR_REGISTRY = 'harbor.dev.afsmtddso.com'
