@@ -2,7 +2,7 @@ pipeline {
     agent {
         label 'jenkins-agent'
     }
-    //TODO("Lab 4 - Artifact Management"): add environment variables adding nothing
+    //TODO("Lab 4 - Artifact Management"): add environment variables
     environment {
         PIPELINE_HASH = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
         HARBOR_REGISTRY = 'harbor.dev.afsmtddso.com'
@@ -57,11 +57,13 @@ pipeline {
             steps {
                 echo "Building database image"
                 //TODO("Lab 4 - Artifact Management"): build the docker db image
-                sh 'docker build -t $DB_IMAGE_NAME-$COMMIT_HASH -f ./db/Dockerfile ./afs-labs-student'
+                 script {
+                    sh 'docker build -t $DB_IMAGE_NAME-$COMMIT_HASH -f ./db/Dockerfile ./afs-labs-student'
                         docker.withRegistry('https://$HARBOR_REGISTRY', 'jgolding-harbor-auth') {
                             sh 'docker tag $DB_IMAGE_NAME-$COMMIT_HASH $HARBOR_REGISTRY/$HARBOR_PROJECT/$DB_IMAGE_NAME:$COMMIT_HASH-$PIPELINE_HASH'
                             sh 'docker push $HARBOR_REGISTRY/$HARBOR_PROJECT/$DB_IMAGE_NAME:$COMMIT_HASH-$PIPELINE_HASH'
-                        }
+                     }
+                 }
             }
             //TODO("Lab 4 - Artifact Management"): clean local docker db image
             post {
